@@ -72,10 +72,9 @@ MineBot = function (host, port) {
                 count: 1
             }, function(err, blockPoints) {
                 if (blockPoints.length > 0) {
-                    bot.targetDigBlock = blockPoints[0];
-                    dig();
+                    this.dig(blockPoints[0]);
                 }
-            });
+            }.bind(this));
         }
     }.bind(this));
 
