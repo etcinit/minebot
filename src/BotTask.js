@@ -36,16 +36,19 @@ BotTask.prototype.step = function (done) {
  * @returns {boolean}
  */
 BotTask.prototype.isSatisfied = function () {
+    var result = true;
+
     // The default behavior is to check that all sub-tasks are met
     if (this.subTasks.length > 0) {
-        this.subTasks.forEach(function (subTask) {
-            if (!subTask.isSatisfied()) {
+        this.subTasks.every(function (subTask) {
+            if (!subTask.isSatisfied() || !subTask.isCompleted()) {
+                result = false;
                 return false;
             }
         });
     }
 
-    return true;
+    return result;
 };
 
 /**
@@ -125,6 +128,15 @@ BotTask.prototype.getNext = function () {
     }
 
     return resolvable[0].getNext();
+};
+
+/**
+ * Adds a subtask
+ *
+ * @param task BotTask
+ */
+BotTask.prototype.push = function (task) {
+    this.subTasks.push(task);
 };
 
 module.exports = BotTask;

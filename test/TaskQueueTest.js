@@ -65,5 +65,32 @@ describe('TaskQueue', function () {
             queue.getNext().should.be.equal(task1);
             queue.getNext().should.not.be.equal(task2);
         });
+
+        it('should return the highest priority task (with subtasks)', function () {
+            var queue = new TaskQueue(),
+                task1 = new BotTask(mockBot),
+                task2 = new BotTask(mockBot),
+                subtask = new BotTask(mockBot),
+
+                getPriority1,
+                getPriority2;
+
+            getPriority1 = sinon.stub(task1, 'getPriority');
+            getPriority2 = sinon.stub(task2, 'getPriority');
+
+            getPriority1.onCall(1).returns(100);
+            getPriority2.onCall(1).returns(10);
+
+            task1.push(subtask);
+
+            queue.push(task1);
+            queue.push(task2);
+
+            queue.getNext().should.be.instanceOf(BotTask);
+
+            queue.getNext().should.be.equal(subtask);
+            queue.getNext().should.not.be.equal(task1);
+            queue.getNext().should.not.be.equal(task2);
+        });
     });
 });
