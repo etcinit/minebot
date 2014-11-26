@@ -95,4 +95,36 @@ BotTask.prototype.getResolvableTasks = function () {
     });
 };
 
+/**
+ * Get next task that should be executed
+ */
+BotTask.prototype.getNext = function () {
+    // If the task is satisfied, then return itself
+    if (this.isSatisfied()) {
+        return this;
+    }
+
+    var resolvable = this.subTasks
+        .filter(function (subTask) {
+            return !subTask.isCompleted();
+        })
+        .sort(function (a, b) {
+            if (a.getPriority() < b.getPriority()) {
+                return -1;
+            }
+
+            if (a.getPriority() > b.getPriority()) {
+                return 1;
+            }
+
+            return 0;
+        });
+
+    if (resolvable.length < 1) {
+        return null;
+    }
+
+    return resolvable[0].getNext();
+};
+
 module.exports = BotTask;
