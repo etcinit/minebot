@@ -13,7 +13,7 @@ JumpTask = function () {
 JumpTask.prototype = new BotTask();
 
 JumpTask.prototype.step = function (done) {
-    var bot = this.engine.bot;
+    var bot = this.app.bot;
 
     bot.setControlState('jump', true);
     bot.setControlState('jump', false);

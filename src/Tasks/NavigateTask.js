@@ -4,7 +4,7 @@ var NavigateTask,
 
     BotTask = require('../BotTask');
 
-NavigateTask = function (bot, target) {
+NavigateTask = function (app, target) {
     // Call parent constructor
     BotTask.apply(this, arguments);
 
@@ -16,7 +16,7 @@ NavigateTask = function (bot, target) {
 NavigateTask.prototype = new BotTask();
 
 NavigateTask.prototype.step = function (done) {
-    var bot = this.engine.bot,
+    var bot = this.app.bot,
         self = this;
 
     bot.chat('Navigating...');

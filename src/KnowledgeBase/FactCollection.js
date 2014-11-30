@@ -2,8 +2,7 @@
 
 var FactCollection,
 
-    HashMap = require('hashmap'),
-    ensure = require('ensure.js');
+    HashMap = require('hashmap');
 
 /**
  * Collection of boolean variables (referenced as facts throughout the app)
@@ -21,8 +20,6 @@ FactCollection = function () {
  * @param value
  */
 FactCollection.prototype.set = function (key, value) {
-    ensure(Boolean, value);
-
     this.map.set(key, value);
 };
 

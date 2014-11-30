@@ -5,17 +5,23 @@ var BotTask;
 /**
  * Construct a bot task
  *
- * @param bot {MineBot}
+ * @param app {MineBot}
  * @constructor
  */
-BotTask = function (bot) {
-    this.engine = bot;
+BotTask = function (app) {
+    this.app = app;
 
     this.subTasks = [];
 
     this.completed = false;
 
     this.name = 'defaultTask';
+
+    this.id = this.generateGUID();
+
+    this.stepCount = 0;
+
+    this.processing = false;
 };
 
 /**
@@ -137,6 +143,26 @@ BotTask.prototype.getNext = function () {
  */
 BotTask.prototype.push = function (task) {
     this.subTasks.push(task);
+};
+
+/**
+ * Generate a GUID
+ */
+BotTask.prototype.generateGUID = function () {
+    var guid = (function() {
+        function s4() {
+            return Math.floor((1 + Math.random()) * 0x10000)
+                .toString(16)
+                .substring(1);
+        }
+
+        return function() {
+            return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+            s4() + '-' + s4() + s4() + s4();
+        };
+    })();
+
+    return guid;
 };
 
 module.exports = BotTask;

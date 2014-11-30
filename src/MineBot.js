@@ -3,9 +3,11 @@
 var MineBot,
 
     TaskQueue = require('./TaskQueue'),
+    BlockBase = require('./KnowledgeBase/BlockBase'),
 
     JumpTask = require('./Tasks/JumpTask'),
     NavigateTask = require('./Tasks/NavigateTask'),
+    DigBlockTask = require('./Tasks/DigBlockTask'),
 
     mineflayer = require('mineflayer'),
     blockFinderPlugin = require('mineflayer-blockfinder')(mineflayer),
@@ -135,18 +137,19 @@ MineBot.prototype.dig = function (target, callback) {
     if (this.bot.targetDigBlock) {
         this.bot.chat("Already digging " + bot.targetDigBlock.name);
     } else {
-        if (target && this.bot.canDigBlock(target)) {
-            this.bot.chat("Starting to dig " + target.name);
-            this.bot.dig(target, function () {
-                this.bot.chat('Finished digging');
-
-                if (callback) {
-                    callback();
-                }
-            }.bind(this));
-        } else {
-            this.bot.chat("Unable to dig target");
-        }
+        //if (target && this.bot.canDigBlock(target)) {
+        //    this.bot.chat("Starting to dig " + target.name);
+        //    this.bot.dig(target, function () {
+        //        this.bot.chat('Finished digging');
+        //
+        //        if (callback) {
+        //            callback();
+        //        }
+        //    }.bind(this));
+        //} else {
+        //    this.bot.chat("Unable to dig target");
+        //}
+        this.queue.push(new DigBlockTask(this, target));
     }
 };
 
@@ -190,18 +193,11 @@ MineBot.prototype.taskLoop = function () {
     var task = null,
         self = this;
 
-    task = this.queue.getNext();
+    task = this.queue.step(function () {
 
-    function schedule() {
-        setTimeout(self.taskLoop.bind(self), 300);
-    }
+    });
 
-    if (task !== null) {
-        console.log('Executing: ' + task.getName());
-        task.step(schedule);
-    }
-
-    schedule();
+    setTimeout(self.taskLoop.bind(self), 400);
 };
 
 module.exports = MineBot;

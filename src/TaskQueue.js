@@ -32,7 +32,37 @@ TaskQueue.prototype.count = function () {
  * Execute the next logical step
  */
 TaskQueue.prototype.step = shield([Function], Nothing, function (done) {
-    this.getNext().step(done);
+    var self = this,
+        nextTask;
+
+    nextTask = this.getNext();
+
+    if (nextTask === null) {
+        done();
+        return;
+    }
+
+    if (nextTask.processing) {
+        console.log('Task', nextTask.name, 'is still processing. Skipping step');
+        done();
+        return;
+    }
+
+    nextTask.processing = true;
+
+    nextTask.step(function () {
+        console.log('this');
+        nextTask.stepCount += 1;
+
+        nextTask.processing = false;
+
+        console.log('Completed:', nextTask.completed);
+        if (nextTask.completed) {
+            console.log('Task', nextTask.name, 'is completed');
+        }
+
+        done.call(this, arguments);
+    });
 });
 
 /**
