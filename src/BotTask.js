@@ -9,7 +9,7 @@ var BotTask;
  * @constructor
  */
 BotTask = function (bot) {
-    this.bot = bot;
+    this.engine = bot;
 
     this.subTasks = [];
 

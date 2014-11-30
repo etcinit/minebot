@@ -2,20 +2,33 @@
 
 var MineBot,
 
+    TaskQueue = require('./TaskQueue'),
+
+    JumpTask = require('./Tasks/JumpTask'),
+    NavigateTask = require('./Tasks/NavigateTask'),
+
     mineflayer = require('mineflayer'),
     blockFinderPlugin = require('mineflayer-blockfinder')(mineflayer),
-    blockTypes = require('../blockTypes');
+    navigationPlugin = require('mineflayer-navigate')(mineflayer),
+    scaffoldPlugin = require('mineflayer-scaffold')(mineflayer),
+    blockTypes = require('./Enums/BlockTypes');
 
 MineBot = function (host, port) {
     // Initialize the bot
     this.bot = mineflayer.createBot({
         username: "minebot",
         host: host || "localhost", // optional
-        port: port ||54400
+        port: port || 60451
     });
 
-    // Setup block finder algorithm
+    // Init task queue
+    this.queue = new TaskQueue();
+    this.taskLoop();
+
+    // Setup plugins
     blockFinderPlugin(this.bot);
+    navigationPlugin(this.bot);
+    scaffoldPlugin(this.bot);
 
     // Setup state tracking variables
     this.lastHealth = -1;
@@ -35,8 +48,12 @@ MineBot = function (host, port) {
         if (username === bot.username) return;
 
         if (message === 'jump') {
-            bot.setControlState('jump', true);
-            bot.setControlState('jump', false);
+            //bot.setControlState('jump', true);
+            //bot.setControlState('jump', false);
+            console.log(this.lastToTalk.position);
+            this.queue.push(new JumpTask(this));
+        } else if (message === 'come') {
+            this.queue.push(new NavigateTask(this, this.lastToTalk.position));
         } else if (message === 'forward') {
             bot.setControlState('forward', true);
         } else if (message === 'back') {
@@ -167,6 +184,24 @@ MineBot.prototype.getNearestEntity = function (entityType) {
     }
 
     return best;
+};
+
+MineBot.prototype.taskLoop = function () {
+    var task = null,
+        self = this;
+
+    task = this.queue.getNext();
+
+    function schedule() {
+        setTimeout(self.taskLoop.bind(self), 300);
+    }
+
+    if (task !== null) {
+        console.log('Executing: ' + task.getName());
+        task.step(schedule);
+    }
+
+    schedule();
 };
 
 module.exports = MineBot;
