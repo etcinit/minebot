@@ -7,8 +7,10 @@ var BotRule;
  *
  * @constructor
  */
-BotRule = function () {
+BotRule = function (app) {
+    this.name = 'Default Rule';
 
+    this.app = app;
 };
 
 /**
@@ -38,8 +40,9 @@ BotRule.prototype.isApplicable = function (facts) {
  * This should only be called if all dependencies are met and the rule is applicable
  *
  * @param facts
+ * @param taskQueue TaskQueue
  */
-BotRule.prototype.execute = function (facts) {
+BotRule.prototype.execute = function (facts, taskQueue) {
 
 };
 

@@ -4,6 +4,8 @@ var MineBot,
 
     TaskQueue = require('./TaskQueue'),
     BlockBase = require('./KnowledgeBase/BlockBase'),
+    RuleEngine = require('./KnowledgeBase/RuleEngine'),
+    RuleLoader = require('./RuleLoader'),
 
     JumpTask = require('./Tasks/JumpTask'),
     NavigateTask = require('./Tasks/NavigateTask'),
@@ -16,6 +18,9 @@ var MineBot,
     blockTypes = require('./Enums/BlockTypes');
 
 MineBot = function (host, port) {
+    var rules,
+        key;
+
     // Initialize the bot
     this.bot = mineflayer.createBot({
         username: "minebot",
@@ -25,7 +30,15 @@ MineBot = function (host, port) {
 
     // Init task queue
     this.queue = new TaskQueue();
-    this.taskLoop();
+
+    // Init knowledge base
+    this.kb = new RuleEngine(this.queue, this);
+
+    // Load rules
+    rules = (new RuleLoader(this)).load();
+    for (key in rules) {
+        this.kb.registerRule(rules[key]);
+    }
 
     // Setup plugins
     blockFinderPlugin(this.bot);
@@ -39,6 +52,8 @@ MineBot = function (host, port) {
     // Alias for bot
     var bot = this.bot;
 
+    this.mainLoop();
+
     // Setup event handling
     bot.on('chat', function (username, message) {
         var entity;
@@ -46,13 +61,14 @@ MineBot = function (host, port) {
         this.lastToTalk = this.bot.players[username].entity;
         this.stareAt();
 
+        // Perceive into the KB
+        this.kb.facts.set('LastToTalk', this.lastToTalk);
+        this.kb.facts.set('ChatMessage', message);
+
         // Ignore own chats
         if (username === bot.username) return;
 
         if (message === 'jump') {
-            //bot.setControlState('jump', true);
-            //bot.setControlState('jump', false);
-            console.log(this.lastToTalk.position);
             this.queue.push(new JumpTask(this));
         } else if (message === 'come') {
             this.queue.push(new NavigateTask(this, this.lastToTalk.position));
@@ -137,18 +153,6 @@ MineBot.prototype.dig = function (target, callback) {
     if (this.bot.targetDigBlock) {
         this.bot.chat("Already digging " + bot.targetDigBlock.name);
     } else {
-        //if (target && this.bot.canDigBlock(target)) {
-        //    this.bot.chat("Starting to dig " + target.name);
-        //    this.bot.dig(target, function () {
-        //        this.bot.chat('Finished digging');
-        //
-        //        if (callback) {
-        //            callback();
-        //        }
-        //    }.bind(this));
-        //} else {
-        //    this.bot.chat("Unable to dig target");
-        //}
         this.queue.push(new DigBlockTask(this, target));
     }
 };
@@ -189,15 +193,25 @@ MineBot.prototype.getNearestEntity = function (entityType) {
     return best;
 };
 
+MineBot.prototype.mainLoop = function () {
+    var self = this;
+
+    this.ruleLoop();
+    this.taskLoop();
+
+    setTimeout(self.mainLoop.bind(self), 400);
+};
+
 MineBot.prototype.taskLoop = function () {
-    var task = null,
-        self = this;
+    var task = null;
 
     task = this.queue.step(function () {
 
     });
+};
 
-    setTimeout(self.taskLoop.bind(self), 400);
+MineBot.prototype.ruleLoop = function () {
+    this.kb.step();
 };
 
 module.exports = MineBot;

@@ -26,8 +26,10 @@
   },
   "dependencies": {
     "hashmap": "^1.2.0",
+    "lodash": "^2.4.1",
     "mineflayer": "^1.0.0",
     "mineflayer-navigate": "0.0.9",
-    "mineflayer-scaffold": "0.0.5"
+    "mineflayer-scaffold": "0.0.5",
+    "require-dir": "^0.1.0"
   }
 }

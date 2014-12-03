@@ -2,7 +2,7 @@
 
 var FactCollection,
 
-    HashMap = require('hashmap');
+    HashMap = require('hashmap').HashMap;
 
 /**
  * Collection of boolean variables (referenced as facts throughout the app)
@@ -11,6 +11,8 @@ var FactCollection,
  */
 FactCollection = function () {
     this.map = new HashMap();
+
+    this.scheduledRemoves = [];
 };
 
 /**
@@ -59,6 +61,27 @@ FactCollection.prototype.has = function (key) {
  */
 FactCollection.prototype.get = function (key) {
     return this.map.get(key);
+};
+
+/**
+ * Remove a fact
+ *
+ * @param key
+ */
+FactCollection.prototype.remove = function (key) {
+    this.map.remove(key);
+};
+
+FactCollection.prototype.scheduleRemove = function (key) {
+    this.scheduledRemoves.push(key);
+};
+
+FactCollection.prototype.flush = function () {
+    this.scheduledRemoves.forEach(function (key) {
+        this.remove(key);
+    }.bind(this));
+
+    this.scheduledRemoves = [];
 };
 
 module.exports = FactCollection;

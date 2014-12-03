@@ -9,10 +9,14 @@ var RuleEngine,
  *
  * @constructor
  */
-RuleEngine = function () {
+RuleEngine = function (taskQueue, app) {
     this.rules = [];
 
     this.facts = new FactCollection();
+
+    this.app = app;
+
+    this.taskQueue = taskQueue;
 };
 
 /**
@@ -31,8 +35,12 @@ RuleEngine.prototype.step = function () {
     var applicable = this.getApplicableRules();
 
     applicable.forEach(function (rule) {
-        rule.execute(this.facts);
+        console.log('Fired rule: ', rule.name);
+
+        rule.execute(this.facts, this.app.queue);
     }.bind(this));
+
+    this.facts.flush();
 };
 
 /**
@@ -55,7 +63,7 @@ RuleEngine.prototype.getApplicableRules = function () {
     var satisfiable = this.getSatisfiableRules();
 
     return satisfiable.filter(function (rule) {
-        return rule.isApplicable(rule);
+        return rule.isApplicable(this.facts);
     }.bind(this));
 };
 
@@ -78,3 +86,5 @@ RuleEngine.prototype.isSatisfiable = function (rule) {
 
     return satisfiable;
 };
+
+module.exports = RuleEngine;

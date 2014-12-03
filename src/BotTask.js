@@ -42,19 +42,18 @@ BotTask.prototype.step = function (done) {
  * @returns {boolean}
  */
 BotTask.prototype.isSatisfied = function () {
-    var result = true;
+    var subTask,
+        key;
 
     // The default behavior is to check that all sub-tasks are met
-    if (this.subTasks.length > 0) {
-        this.subTasks.every(function (subTask) {
-            if (!subTask.isSatisfied() || !subTask.isCompleted()) {
-                result = false;
-                return false;
-            }
-        });
+    for (key in this.subTasks) {
+        subTask = this.subTasks[key];
+        if (!subTask.isSatisfied() || !subTask.isCompleted()) {
+            return false;
+        }
     }
 
-    return result;
+    return true;
 };
 
 /**

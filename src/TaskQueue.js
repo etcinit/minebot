@@ -48,18 +48,20 @@ TaskQueue.prototype.step = shield([Function], Nothing, function (done) {
         return;
     }
 
+    console.log('Process task', nextTask.name);
+
     nextTask.processing = true;
 
     nextTask.step(function () {
-        console.log('this');
         nextTask.stepCount += 1;
 
         nextTask.processing = false;
 
-        console.log('Completed:', nextTask.completed);
         if (nextTask.completed) {
-            console.log('Task', nextTask.name, 'is completed');
+            console.log('Task', nextTask.name, 'was completed');
         }
+
+        console.log(nextTask.subTasks);
 
         done.call(this, arguments);
     });
