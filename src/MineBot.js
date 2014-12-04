@@ -114,13 +114,20 @@ MineBot = function (host, port) {
     }.bind(this));
 
     bot.on('health', function () {
-        if (this.lastHealth == -1) {
-            this.lastHealth = bot.health;
-            return;
-        }
+        //if (this.lastHealth == -1) {
+        //    this.lastHealth = bot.health;
+        //    return;
+        //}
+        //
+        //if (this.lastHealth > bot.health) {
+        //    this.attackNearest();
+        //}
+    }.bind(this));
 
-        if (this.lastHealth > bot.health) {
-            this.attackNearest();
+    bot.on('entityHurt', function (entity) {
+        if (entity.username && entity.username === 'minebot') {
+            console.log('Ouch');
+            this.kb.facts.set('UnderAttack', true);
         }
     }.bind(this));
 };

@@ -61,8 +61,6 @@ TaskQueue.prototype.step = shield([Function], Nothing, function (done) {
             console.log('Task', nextTask.name, 'was completed');
         }
 
-        console.log(nextTask.subTasks);
-
         done.call(this, arguments);
     });
 });
