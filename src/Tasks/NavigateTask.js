@@ -8,7 +8,9 @@ NavigateTask = function (app, target) {
     // Call parent constructor
     BotTask.apply(this, arguments);
 
-    this.targetPosition = target;
+    if (target) {
+        this.targetPosition = target;
+    }
 
     this.name = 'NavigateTask';
 };
@@ -19,7 +21,13 @@ NavigateTask.prototype.step = function (done) {
     var bot = this.app.bot,
         self = this;
 
-    bot.chat('Navigating...');
+    if (this.targetPosition) {
+        bot.chat('Navigating...');
+    } else if (this.app.kb.facts.has('LastDigTarget')) {
+        bot.chat('Picking up stuff...');
+
+        this.targetPosition = this.app.kb.facts.get('LastDigTarget').position;
+    }
 
     bot.scaffold.to(this.targetPosition, function (err) {
         if (err) {

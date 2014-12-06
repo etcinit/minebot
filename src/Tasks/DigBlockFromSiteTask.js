@@ -7,10 +7,11 @@ var DigBlockFromSiteTask,
     FindTargetBlockTask = require('./FindTargetBlockTask'),
     NavigateTask = require('./NavigateTask');
 
-DigBlockFromSiteTask = function (app, sitePosition) {
+DigBlockFromSiteTask = function (app, sitePosition, type) {
     var navTask,
         findBlockTask,
-        digTask;
+        digTask,
+        navAfterTask;
 
     BotTask.apply(this, arguments);
 
@@ -20,12 +21,14 @@ DigBlockFromSiteTask = function (app, sitePosition) {
 
     // Create sub tasks
     navTask = new NavigateTask(this.app, this.sitePosition);
-    findBlockTask = new FindTargetBlockTask(this.app);
+    findBlockTask = new FindTargetBlockTask(this.app, type);
     digTask = new DigBlockTask(this.app);
+    navAfterTask = new NavigateTask(this.app);
 
     this.subTasks.push(navTask);
     this.subTasks.push(findBlockTask);
     this.subTasks.push(digTask);
+    this.subTasks.push(navAfterTask);
 };
 
 DigBlockFromSiteTask.prototype = new BotTask();

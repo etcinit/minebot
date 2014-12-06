@@ -18,6 +18,7 @@ AttackTask.prototype.step = function (done) {
     var bot = this.app.bot;
 
     bot.attack(this.target);
+    bot.lookAt(this.target.position.offset(0, this.target.height, 0));
 
     this.completed = true;
 

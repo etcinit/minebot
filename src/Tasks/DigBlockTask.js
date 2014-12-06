@@ -29,6 +29,8 @@ DigBlockTask.prototype.step = function (done) {
         bot.dig(target, function () {
             bot.chat('Finished digging');
 
+            this.app.kb.facts.set('LastDigTarget', this.target);
+
             if (this.app.kb.facts.has('DigTarget')) {
                 this.app.kb.facts.remove('DigTarget');
             }

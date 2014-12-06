@@ -5,7 +5,10 @@ var CommandRule,
     ensure = require('ensure.js'),
 
     BotRule = require('../BotRule'),
-    JumpTask = require('../Tasks/JumpTask');
+    BlockTypes = require('../Enums/BlockTypes'),
+    JumpTask = require('../Tasks/JumpTask'),
+    EquipBlockTask = require('../Tasks/EquipBlockTask'),
+    GamemodeTask = require('../Tasks/GamemodeTask');
 
 CommandRule = function () {
     BotRule.apply(this, arguments);
@@ -22,7 +25,7 @@ CommandRule.prototype.getDependencies = function () {
 CommandRule.prototype.isApplicable = function (facts) {
     return ensure.isIn(
         facts.get('ChatMessage'),
-        ['spawn']
+        ['jump', 'equipDirt', 'equipStone', 'equipSand', 'getCreative', 'becomeSurvivalist']
     );
 };
 
@@ -35,6 +38,21 @@ CommandRule.prototype.execute = function (facts, taskQueue) {
     switch (message) {
     case 'jump':
         taskQueue.push(new JumpTask(this.app));
+        break;
+    case 'equipDirt':
+        taskQueue.push(new EquipBlockTask(this.app, BlockTypes.DIRT));
+        break;
+    case 'equipStone':
+        taskQueue.push(new EquipBlockTask(this.app, BlockTypes.STONE));
+        break;
+    case 'equipSand':
+        taskQueue.push(new EquipBlockTask(this.app, BlockTypes.SAND));
+        break;
+    case 'getCreative':
+        taskQueue.push(new GamemodeTask(this.app, 1));
+        break;
+    case 'becomeSurvivalist':
+        taskQueue.push(new GamemodeTask(this.app, 0));
         break;
     }
 };

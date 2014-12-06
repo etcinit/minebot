@@ -5,12 +5,12 @@ var FindTargetBlockTask,
     BotTask = require('../BotTask'),
     BlockTypes = require('../Enums/BlockTypes');
 
-FindTargetBlockTask = function (type) {
+FindTargetBlockTask = function (app, type) {
     BotTask.apply(this, arguments);
 
     this.name = 'Find target block task';
 
-    this.type = BlockTypes.GRASS;
+    this.type = type || BlockTypes.GRASS;
 };
 
 FindTargetBlockTask.prototype = new BotTask();
