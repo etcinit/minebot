@@ -9,6 +9,7 @@ var CommandRule,
     JumpTask = require('../Tasks/JumpTask'),
     EquipBlockTask = require('../Tasks/EquipBlockTask'),
     GamemodeTask = require('../Tasks/GamemodeTask'),
+    NavigateTask = require('../Tasks/NavigateTask'),
     PlaceBlockUnderTask = require('../Tasks/PlaceBlockUnderTask');
 
 CommandRule = function () {
@@ -26,7 +27,7 @@ CommandRule.prototype.getDependencies = function () {
 CommandRule.prototype.isApplicable = function (facts) {
     return ensure.isIn(
         facts.get('ChatMessage'),
-        ['jump', 'equipDirt', 'equipStone', 'equipSand', 'getCreative', 'becomeSurvivalist', 'placeUnder']
+        ['jump', 'equipDirt', 'equipStone', 'equipSand', 'getCreative', 'becomeSurvivalist', 'placeUnder', 'come']
     );
 };
 
@@ -57,6 +58,9 @@ CommandRule.prototype.execute = function (facts, taskQueue) {
         break;
     case 'placeUnder':
         taskQueue.push(new PlaceBlockUnderTask(this.app));
+        break;
+    case 'come':
+        taskQueue.push(new NavigateTask(this.app, facts.get('LastToTalk').position));
         break;
     }
 };
