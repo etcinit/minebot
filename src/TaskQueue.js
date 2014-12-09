@@ -8,6 +8,11 @@ var TaskQueue,
 
     BotTask = require('./BotTask');
 
+/**
+ * Class TaskQueue
+ *
+ * @constructor
+ */
 TaskQueue = function () {
     this.taskTree = [];
 };

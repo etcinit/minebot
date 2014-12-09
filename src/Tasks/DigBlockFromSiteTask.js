@@ -20,7 +20,7 @@ DigBlockFromSiteTask = function (app, sitePosition, type) {
     this.sitePosition = sitePosition;
 
     // Create sub tasks
-    navTask = new NavigateTask(this.app, this.sitePosition);
+    navTask = new NavigateTask(this.app, this.sitePosition, 3);
     findBlockTask = new FindTargetBlockTask(this.app, type);
     digTask = new DigBlockTask(this.app);
     navAfterTask = new NavigateTask(this.app);

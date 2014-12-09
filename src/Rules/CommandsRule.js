@@ -8,7 +8,8 @@ var CommandRule,
     BlockTypes = require('../Enums/BlockTypes'),
     JumpTask = require('../Tasks/JumpTask'),
     EquipBlockTask = require('../Tasks/EquipBlockTask'),
-    GamemodeTask = require('../Tasks/GamemodeTask');
+    GamemodeTask = require('../Tasks/GamemodeTask'),
+    PlaceBlockUnderTask = require('../Tasks/PlaceBlockUnderTask');
 
 CommandRule = function () {
     BotRule.apply(this, arguments);
@@ -25,7 +26,7 @@ CommandRule.prototype.getDependencies = function () {
 CommandRule.prototype.isApplicable = function (facts) {
     return ensure.isIn(
         facts.get('ChatMessage'),
-        ['jump', 'equipDirt', 'equipStone', 'equipSand', 'getCreative', 'becomeSurvivalist']
+        ['jump', 'equipDirt', 'equipStone', 'equipSand', 'getCreative', 'becomeSurvivalist', 'placeUnder']
     );
 };
 
@@ -53,6 +54,9 @@ CommandRule.prototype.execute = function (facts, taskQueue) {
         break;
     case 'becomeSurvivalist':
         taskQueue.push(new GamemodeTask(this.app, 0));
+        break;
+    case 'placeUnder':
+        taskQueue.push(new PlaceBlockUnderTask(this.app));
         break;
     }
 };

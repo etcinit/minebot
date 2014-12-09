@@ -113,17 +113,6 @@ MineBot = function (host, port) {
         }
     }.bind(this));
 
-    bot.on('health', function () {
-        //if (this.lastHealth == -1) {
-        //    this.lastHealth = bot.health;
-        //    return;
-        //}
-        //
-        //if (this.lastHealth > bot.health) {
-        //    this.attackNearest();
-        //}
-    }.bind(this));
-
     bot.on('entityHurt', function (entity) {
         if (entity.username && entity.username === 'minebot') {
             console.log('Ouch');
@@ -140,64 +129,6 @@ MineBot.prototype.stareAt = function () {
     this.bot.lookAt(this.lastToTalk.position.offset(0, this.lastToTalk.height, 0));
 
     setTimeout(this.stareAt.bind(this), 1000);
-};
-
-/**
- * Attack the closest entity (could be anything)
- */
-MineBot.prototype.attackNearest = function () {
-    var entity = this.getNearestEntity();
-
-    this.bot.attack(entity);
-};
-
-/**
- * Attempt to dig the target block
- *
- * @param target
- */
-MineBot.prototype.dig = function (target, callback) {
-    if (this.bot.targetDigBlock) {
-        this.bot.chat("Already digging " + bot.targetDigBlock.name);
-    } else {
-        this.queue.push(new DigBlockTask(this, target));
-    }
-};
-
-/**
- * Find the nearest entity (type is optional)
- *
- * @param [entityType]
- * @returns {*}
- */
-MineBot.prototype.getNearestEntity = function (entityType) {
-    var id,
-        entity,
-        dist,
-        best = null,
-        bestDistance = null;
-
-    // Scan all nearby entities and select the closest
-    for (id in this.bot.entities) {
-        entity = this.bot.entities[id];
-
-        if (entityType && entity.type !== entityType) {
-            continue;
-        }
-
-        if (entity === this.bot.entity) {
-            continue;
-        }
-
-        dist = this.bot.entity.position.distanceTo(entity.position);
-
-        if (!best || dist < bestDistance) {
-            best = entity;
-            bestDistance = dist;
-        }
-    }
-
-    return best;
 };
 
 MineBot.prototype.mainLoop = function () {

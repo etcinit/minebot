@@ -4,7 +4,8 @@ var SetResourceSiteRule,
 
     _ = require('lodash'),
 
-    BotRule = require('../BotRule');
+    BotRule = require('../BotRule'),
+    ChatTask = require('../Tasks/ChatTask');
 
 SetResourceSiteRule = function () {
     BotRule.apply(this, arguments);
@@ -30,6 +31,7 @@ SetResourceSiteRule.prototype.execute = function (facts, taskQueue) {
     facts.set('ResourceSite', player.position.clone());
 
     console.log('Resources site set to: ', player.position);
+    taskQueue.push(new ChatTask(this.app, 'Got that! I\'ll get materials from here'));
 };
 
 module.exports = SetResourceSiteRule;

@@ -1,13 +1,26 @@
+"use strict";
+
 var RuleLoader,
 
     requireDir = require('require-dir');
 
+/**
+ * Class RuleLoader
+ *
+ * @param app
+ * @constructor
+ */
 RuleLoader = function (app) {
     this.rules = {};
 
     this.app = app;
 };
 
+/**
+ * Load rules from rule directory
+ *
+ * @returns {Array}
+ */
 RuleLoader.prototype.load = function () {
     var initializedRules = [],
         key;

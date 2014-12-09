@@ -6,5 +6,6 @@ module.exports = {
     GRASS: 2,
     DIRT: 3,
     BEDROCK: 7,
-    WATER: 8
+    WATER: 8,
+    SAND: 12
 };

@@ -1,35 +1,36 @@
 {
-  "name": "minebot",
-  "version": "0.0.0",
-  "description": "minebot =======",
-  "main": "index.js",
-  "directories": {
-    "test": "test"
-  },
-  "scripts": {
-    "test": "mocha test/ test/**/*.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/eduard44/minebot.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/eduard44/minebot/issues"
-  },
-  "homepage": "https://github.com/eduard44/minebot",
-  "devDependencies": {
-    "mocha": "^2.0.1",
-    "should": "^4.3.0",
-    "sinon": "^1.12.1"
-  },
-  "dependencies": {
-    "hashmap": "^1.2.0",
-    "lodash": "^2.4.1",
-    "mineflayer": "^1.0.0",
-    "mineflayer-navigate": "0.0.9",
-    "mineflayer-scaffold": "0.0.5",
-    "require-dir": "^0.1.0"
-  }
+    "name": "minebot",
+    "version": "0.2.0",
+    "description": "Experimental Minecraft AI agent",
+    "main": "index.js",
+    "directories": {
+        "test": "test"
+    },
+    "scripts": {
+        "test": "mocha test/ test/**/*.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/eduard44/minebot.git"
+    },
+    "author": "Eduardo Trujillo <ed@chromabits.com>",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/eduard44/minebot/issues"
+    },
+    "homepage": "https://github.com/eduard44/minebot",
+    "devDependencies": {
+        "mocha": "^2.0.1",
+        "should": "^4.3.0",
+        "sinon": "^1.12.1"
+    },
+    "dependencies": {
+        "hashmap": "^1.2.0",
+        "lodash": "^2.4.1",
+        "mineflayer": "^1.0.0",
+        "mineflayer-navigate": "0.0.9",
+        "mineflayer-scaffold": "0.0.5",
+        "require-dir": "^0.1.0",
+        "vec3": "^0.1.3"
+    }
 }
